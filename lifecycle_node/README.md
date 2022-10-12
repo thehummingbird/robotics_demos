@@ -1,5 +1,5 @@
 # Lifecycle Node Demo
-This demo builds a lifecycle publisher in ROS2 from scratch and demonstrates the use by building a subscriber and service client.
+This demo builds a lifecycle publisher in ROS 2 from scratch and demonstrates the use by building a subscriber and service client.
 
 ## System Design
 ![lifecycle_node_design](../images/lifecycle_node_design.png)
