@@ -1,0 +1,18 @@
+<root main_tree_to_execute = "MainTree" >
+  <BehaviorTree ID="MainTree">
+    <Sequence name="root_sequence">
+      <FindBall name="find_ball" ball_location="{location}"/>
+      <Sequence name="pick_ball">
+        <Fallback name="reach_ball">
+          <BallClose name="ball_close" ball_location="{location}"/>
+          <ApproachBall name="approach_ball"/>
+        </Fallback>
+        <Fallback name="get_ball">
+          <BallGrasped name="ball_grasped"/>
+          <GraspBall name="grasp_ball"/>
+        </Fallback>
+      </Sequence>
+      <PlaceBall name="place_ball"/>
+    </Sequence>
+  </BehaviorTree>
+</root>
