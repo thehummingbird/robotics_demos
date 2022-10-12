@@ -1,5 +1,5 @@
 # Robotics Demos
-This demo build a simple behavior tree from scratch in C++ using [BehaviorTree.CPP](https://www.behaviortree.dev/)
+This demo builds a simple behavior tree from scratch in C++ using [BehaviorTree.CPP](https://www.behaviortree.dev/)
 
 ## Behavior Tree
 ![bt_simple_pick](../../images/bt_simple_pick.png)
