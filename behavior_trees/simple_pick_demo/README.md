@@ -1,4 +1,4 @@
-# Robotics Demos
+# Behavior Tree Simple Demo
 This demo builds a simple behavior tree from scratch in C++ using [BehaviorTree.CPP](https://www.behaviortree.dev/)
 
 ## Behavior Tree
@@ -6,4 +6,4 @@ This demo builds a simple behavior tree from scratch in C++ using [BehaviorTree.
 
 It was made in service of [this](https://www.youtube.com/watch?v=4PUiDmD5dkg&t=795s) tutorial video on Youtube.
 
-The video and this demo was inspired by bheaviorTree.CPP examples
+The video and this demo was inspired by BehaviorTree.CPP examples
