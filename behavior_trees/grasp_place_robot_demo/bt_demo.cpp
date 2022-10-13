@@ -6,6 +6,12 @@
 
 using namespace std::chrono_literals;
 
+BT::NodeStatus ballFound()
+{
+  std::cout << "Ball not found" << std::endl;
+  return BT::NodeStatus::FAILURE;
+}
+
 class FindBall : public BT::SyncActionNode
 {
 public:
@@ -21,24 +27,23 @@ public:
 
   BT::NodeStatus tick() override
   {
-    std::this_thread::sleep_for(5s);
-    std::vector<int> v{1, 2, 3};
-    BT::TreeNode::setOutput("ball_location", v);
+    std::this_thread::sleep_for(3s);
+    std::vector<int> ballLocation{1, 2, 3};
+    BT::TreeNode::setOutput("ball_location", ballLocation);
     std::cout << "Ball Found" << std::endl;
     return BT::NodeStatus::SUCCESS;
   }
 };
 
-BT::NodeStatus BallClose(BT::TreeNode &self)
+BT::NodeStatus ballClose(BT::TreeNode &self)
 {
   BT::Optional<std::vector<int>> msg = self.getInput<std::vector<int>>("ball_location");
 
   if (!msg)
   {
-    throw BT::RuntimeError("missing required input: ", msg.error());
+    throw BT::RuntimeError("missing required input[message]: ", msg.error());
   }
 
-  //std::cout << "Ball at " << msg.value() << " .That's far away" << std::endl;
   for (const auto position_coordinate : msg.value())
   {
     std::cout << position_coordinate << ' ';
@@ -48,24 +53,84 @@ BT::NodeStatus BallClose(BT::TreeNode &self)
   return BT::NodeStatus::FAILURE;
 }
 
-BT::NodeStatus ApproachBall()
+class ApproachBall : public BT::SyncActionNode
 {
-  std::this_thread::sleep_for(5s);
-  std::cout << "Approached Ball" << std::endl;
-  return BT::NodeStatus::SUCCESS;
-}
+public:
+  explicit ApproachBall(const std::string &name, const BT::NodeConfiguration &config)
+      : BT::SyncActionNode(name, config)
+  {
+  }
 
-BT::NodeStatus BallGrasped()
+  static BT::PortsList providedPorts()
+  {
+    return {BT::InputPort<std::vector<int>>("ball_location")};
+  }
+
+  BT::NodeStatus tick() override
+  {
+    BT::Optional<std::vector<int>> msg = getInput<std::vector<int>>("ball_location");
+
+    if (!msg)
+    {
+      throw BT::RuntimeError("missing required input[message]: ", msg.error());
+    }
+
+    for (const auto position_coordinate : msg.value())
+    {
+      std::cout << position_coordinate << ' ';
+    }
+    std::this_thread::sleep_for(3s);
+    std::cout << "Ball Approached" << std::endl;
+    return BT::NodeStatus::SUCCESS;
+  }
+};
+
+BT::NodeStatus ballGrasped()
 {
   std::cout << "Ball not grasped" << std::endl;
   return BT::NodeStatus::FAILURE;
 }
 
-BT::NodeStatus GraspBall()
+class GraspBall : public BT::SyncActionNode
 {
-  std::this_thread::sleep_for(5s);
-  std::cout << "Grasped Ball" << std::endl;
-  return BT::NodeStatus::SUCCESS;
+public:
+  explicit GraspBall(const std::string &name) : BT::SyncActionNode(name, {})
+  {
+  }
+
+  BT::NodeStatus tick() override
+  {
+    std::this_thread::sleep_for(3s);
+    std::cout << "Ball grasped" << std::endl;
+    return BT::NodeStatus::SUCCESS;
+  }
+};
+
+BT::NodeStatus binClose()
+{
+  std::cout << "Bin not close" << std::endl;
+  return BT::NodeStatus::FAILURE;
+}
+
+class ApproachBin : public BT::SyncActionNode
+{
+public:
+  explicit ApproachBin(const std::string &name) : BT::SyncActionNode(name, {})
+  {
+  }
+
+  BT::NodeStatus tick() override
+  {
+    std::this_thread::sleep_for(3s);
+    std::cout << "Bin approached" << std::endl;
+    return BT::NodeStatus::SUCCESS;
+  }
+};
+
+BT::NodeStatus ballPlaced()
+{
+  std::cout << "Ball not placed" << std::endl;
+  return BT::NodeStatus::FAILURE;
 }
 
 class PlaceBall : public BT::SyncActionNode
@@ -77,8 +142,23 @@ public:
 
   BT::NodeStatus tick() override
   {
-    std::this_thread::sleep_for(5s);
-    std::cout << "Ball Placed" << std::endl;
+    std::this_thread::sleep_for(3s);
+    std::cout << "Ball placed" << std::endl;
+    return BT::NodeStatus::SUCCESS;
+  }
+};
+
+class AskForHelp : public BT::SyncActionNode
+{
+public:
+  explicit AskForHelp(const std::string &name) : BT::SyncActionNode(name, {})
+  {
+  }
+
+  BT::NodeStatus tick() override
+  {
+    std::cout << "Asking for help. Waiting for 10 seconds here" << std::endl;
+    std::this_thread::sleep_for(10s);
     return BT::NodeStatus::SUCCESS;
   }
 };
@@ -86,27 +166,30 @@ public:
 int main()
 {
   BT::BehaviorTreeFactory factory;
+
+  factory.registerSimpleCondition("BallFound", std::bind(ballFound));
   factory.registerNodeType<FindBall>("FindBall");
-  factory.registerNodeType<PlaceBall>("PlaceBall");
 
   BT::PortsList say_something_ports = {BT::InputPort<std::vector<int>>("ball_location")};
-  factory.registerSimpleCondition("BallClose", BallClose,
+  factory.registerSimpleCondition("BallClose", ballClose,
                                   say_something_ports);
+  factory.registerNodeType<ApproachBall>("ApproachBall");
 
-  //factory.registerSimpleCondition("BallClose", std::bind(BallClose));
-  factory.registerSimpleAction(
-      "ApproachBall",
-      std::bind(ApproachBall));
+  factory.registerSimpleCondition("BallGrasped", std::bind(ballGrasped));
+  factory.registerNodeType<GraspBall>("GraspBall");
 
-  factory.registerSimpleCondition("BallGrasped", std::bind(BallGrasped));
-  factory.registerSimpleAction(
-      "GraspBall",
-      std::bind(GraspBall));
+  factory.registerSimpleCondition("BinClose", std::bind(binClose));
+  factory.registerNodeType<ApproachBin>("ApproachBin");
 
-  //Create Tree
+  factory.registerSimpleCondition("BallPlaced", std::bind(ballPlaced));
+  factory.registerNodeType<ApproachBin>("PlaceBall");
+
+  factory.registerNodeType<AskForHelp>("AskForHelp");
+
+  // Create Tree
   auto tree = factory.createTreeFromFile("./../bt_tree.xml");
 
-  //execute the tree
+  // execute the tree
   tree.tickRoot();
 
   return 0;
