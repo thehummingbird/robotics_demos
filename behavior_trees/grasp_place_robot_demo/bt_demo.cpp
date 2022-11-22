@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
-#include "behaviortree_cpp_v3/action_node.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
+#include "behaviortree_cpp/action_node.h"
+#include "behaviortree_cpp/bt_factory.h"
 #include <vector>
 
 using namespace std::chrono_literals;
