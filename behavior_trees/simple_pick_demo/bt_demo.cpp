@@ -72,7 +72,7 @@ int main()
   auto tree = factory.createTreeFromFile("./../bt_tree.xml");
 
   //execute the tree
-  tree.tickRoot();
+  tree.tickWhileRunning();
 
   return 0;
 }
