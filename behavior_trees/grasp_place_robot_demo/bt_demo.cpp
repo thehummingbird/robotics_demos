@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
-#include "behaviortree_cpp_v3/action_node.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
+#include "behaviortree_cpp/action_node.h"
+#include "behaviortree_cpp/bt_factory.h"
 #include <vector>
 
 using namespace std::chrono_literals;
@@ -15,7 +15,7 @@ BT::NodeStatus ballFound()
 class FindBall : public BT::SyncActionNode
 {
 public:
-  explicit FindBall(const std::string &name, const BT::NodeConfiguration &config)
+  explicit FindBall(const std::string &name, const BT::NodeConfig &config)
       : BT::SyncActionNode(name, config)
   {
   }
@@ -37,7 +37,7 @@ public:
 
 BT::NodeStatus ballClose(BT::TreeNode &self)
 {
-  BT::Optional<std::vector<int>> msg = self.getInput<std::vector<int>>("ball_location");
+  auto msg = self.getInput<std::vector<int>>("ball_location");
 
   if (!msg)
   {
@@ -56,7 +56,7 @@ BT::NodeStatus ballClose(BT::TreeNode &self)
 class ApproachBall : public BT::SyncActionNode
 {
 public:
-  explicit ApproachBall(const std::string &name, const BT::NodeConfiguration &config)
+  explicit ApproachBall(const std::string &name, const BT::NodeConfig &config)
       : BT::SyncActionNode(name, config)
   {
   }
@@ -68,7 +68,7 @@ public:
 
   BT::NodeStatus tick() override
   {
-    BT::Optional<std::vector<int>> msg = getInput<std::vector<int>>("ball_location");
+    auto msg = getInput<std::vector<int>>("ball_location");
 
     if (!msg)
     {
@@ -190,7 +190,7 @@ int main()
   auto tree = factory.createTreeFromFile("./../bt_tree.xml");
 
   // execute the tree
-  tree.tickRoot();
+  tree.tickWhileRunning();
 
   return 0;
 }
