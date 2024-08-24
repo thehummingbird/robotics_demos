@@ -49,7 +49,7 @@ VisualOdometry::VisualOdometry()
 int VisualOdometry::run(string dataset_path)
 {
   Mat img_1, img_2;
-  Mat R_f, t_f; // the final rotation and tranlation vectors containing the
+  Mat R_f, t_f; // the final rotation and tranlation vectors containing the camera pose
 
   double scale = 1.00;
   char filename1[200];
@@ -63,7 +63,7 @@ int VisualOdometry::run(string dataset_path)
   int thickness = 1;
   cv::Point text_org(10, 50);
 
-  // read the first two frames from the dataset
+  // read the first two frames from the dataset for initial setup
   Mat img_1_c = imread(filename1);
   Mat img_2_c = imread(filename2);
 
@@ -73,7 +73,7 @@ int VisualOdometry::run(string dataset_path)
     return -1;
   }
 
-  // we work with grayscale images
+  // use grayscale images
   cvtColor(img_1_c, img_1, COLOR_BGR2GRAY);
   cvtColor(img_2_c, img_2, COLOR_BGR2GRAY);
 
@@ -121,7 +121,7 @@ int VisualOdometry::run(string dataset_path)
     Mat prevPts(2, prev_features.size(), CV_64F), currPts(2, curr_features.size(), CV_64F);
 
     for (int i = 0; i < prev_features.size(); i++)
-    { // this (x,y) combination makes sense as observed from the source code of triangulatePoints on GitHub
+    {
       prevPts.at<double>(0, i) = prev_features.at(i).x;
       prevPts.at<double>(1, i) = prev_features.at(i).y;
 
@@ -149,7 +149,7 @@ int VisualOdometry::run(string dataset_path)
     prev_features = curr_features;
 
     int x = int(t_f.at<double>(0)) + 300;
-    int y = int(-1 * t_f.at<double>(2)) + 500;
+    int y = int(-1 * t_f.at<double>(2)) + 500; // -1 to invert for visualisation
     circle(traj, Point(x, y), 1, CV_RGB(255, 0, 0), 2);
 
     rectangle(traj, Point(10, 30), Point(550, 50), CV_RGB(0, 0, 0), cv::FILLED);
