@@ -148,8 +148,8 @@ int VisualOdometry::run(string dataset_path)
     prev_image = curr_image.clone();
     prev_features = curr_features;
 
-    int x = int(t_f.at<double>(0)) + 300;
-    int y = int(-1 * t_f.at<double>(2)) + 500; // -1 to invert for visualisation
+    int x = int(t_f.at<double>(0)) + 300;      // offset for easier visualisation
+    int y = int(-1 * t_f.at<double>(2)) + 500; // -1 inversion and offset for easier visualisation
     circle(traj, Point(x, y), 1, CV_RGB(255, 0, 0), 2);
 
     rectangle(traj, Point(10, 30), Point(550, 50), CV_RGB(0, 0, 0), cv::FILLED);
