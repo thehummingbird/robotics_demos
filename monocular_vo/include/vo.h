@@ -8,6 +8,6 @@ using namespace std;
 class VisualOdometry
 {
 public:
-  VisualOdometry();
+  VisualOdometry() = default;
   int run(string dataset_path);
 };

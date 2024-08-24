@@ -1,6 +1,6 @@
 #include "vo.h"
+
 #include <filesystem>
-#include <iostream>
 int main(int argc, char **argv)
 {
   VisualOdometry vo;

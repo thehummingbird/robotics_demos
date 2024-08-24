@@ -43,10 +43,6 @@ double getAbsoluteScale(int frame_id, int sequence_id, double z_cal)
   return sqrt((x - x_prev) * (x - x_prev) + (y - y_prev) * (y - y_prev) + (z - z_prev) * (z - z_prev));
 }
 
-VisualOdometry::VisualOdometry()
-{
-}
-
 int VisualOdometry::run(string dataset_path)
 {
   Mat img_1, img_2;
@@ -104,8 +100,8 @@ int VisualOdometry::run(string dataset_path)
 
   clock_t begin = clock();
 
-  namedWindow("Ego Motion Camera", WINDOW_AUTOSIZE); // Camera Display Window
-  namedWindow("Trajectory", WINDOW_AUTOSIZE);        // Trajectory Display Window
+  namedWindow("Road facing Egomotion camera", WINDOW_AUTOSIZE); // Camera Display Window
+  namedWindow("Trajectory", WINDOW_AUTOSIZE);                   // Trajectory Display Window
 
   Mat traj = Mat::zeros(600, 600, CV_8UC3);
 
@@ -157,7 +153,7 @@ int VisualOdometry::run(string dataset_path)
     sprintf(text, "Coordinates: x = %02fm y = %02fm z = %02fm", t_f.at<double>(0), t_f.at<double>(1), t_f.at<double>(2));
     putText(traj, text, text_org, font_face, font_scale, Scalar::all(255), thickness, 8);
 
-    imshow("Road facing camera", curr_image_c);
+    imshow("Road facing Egomotion camera", curr_image_c);
     imshow("Trajectory", traj);
 
     waitKey(1);
