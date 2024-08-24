@@ -3,7 +3,7 @@
 #define MAX_FRAME 1000
 #define MIN_NUM_FEAT 2000
 
-double getAbsoluteScale(int frame_id, int sequence_id, double z_cal)
+double getAbsoluteScale(int frame_id, double z_cal)
 {
 
   string line;
@@ -126,7 +126,7 @@ int VisualOdometry::run(string dataset_path)
       currPts.at<double>(1, i) = curr_features.at(i).y;
     }
 
-    scale = getAbsoluteScale(num_frame, 0, t.at<double>(2));
+    scale = getAbsoluteScale(num_frame, t.at<double>(2));
 
     if ((scale > 0.1) && (t.at<double>(2) > t.at<double>(0)) && (t.at<double>(2) > t.at<double>(1)))
     {
