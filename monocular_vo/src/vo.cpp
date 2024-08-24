@@ -19,7 +19,6 @@ double getAbsoluteScale(int frame_id, int sequence_id, double z_cal)
       x_prev = x;
       y_prev = y;
       std::istringstream in(line);
-      // cout << line << '\n';
       for (int j = 0; j < 12; j++)
       {
         in >> z;
@@ -70,7 +69,7 @@ int VisualOdometry::run(string dataset_path)
 
   if (!img_1_c.data || !img_2_c.data)
   {
-    std::cout << " --(!) Error reading images " << std::endl;
+    std::cout << "Error reading images! " << std::endl;
     return -1;
   }
 
@@ -84,16 +83,10 @@ int VisualOdometry::run(string dataset_path)
   vector<uchar> status;
   featureTracking(img_1, img_2, points1, points2, status); // track those features to img_2
 
-  // TODO: add a fucntion to load these values directly from KITTI's calib files
-  //  WARNING: different sequences in the KITTI VO dataset have different intrinsic/extrinsic parameters
-  // double focal = 718.8560;
-  // cv::Point2d pp(607.1928, 185.2157);
-
   double focal;
   cv::Point2d pp;
   getCalibrationData(dataset_path, focal, pp);
 
-  std::cout << " focal: " << focal << " pp: " << pp.x << " " << pp.y << std::endl;
   // recovering the pose and the essential matrix
   Mat E, R, t, mask;
   E = findEssentialMat(points2, points1, focal, pp, RANSAC, 0.999, 1.0, mask);

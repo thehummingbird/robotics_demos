@@ -1,10 +1,12 @@
 #include "vo.h"
-
+#include <filesystem>
+#include <iostream>
 int main(int argc, char **argv)
 {
   VisualOdometry vo;
+  std::filesystem::path dataset_path = std::filesystem::current_path() / "../kitti_dataset" / "data_odometry_gray";
+  std::filesystem::path imageset_path = dataset_path / "dataset/sequences/00/";
 
-  string path = "/home/sharad/visual_odometry/monocular/data_odometry_gray/dataset/sequences/00/";
-  int ret = vo.run(path);
+  int ret = vo.run(imageset_path.string());
   return ret;
 }
