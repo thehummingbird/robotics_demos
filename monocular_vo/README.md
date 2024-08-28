@@ -15,4 +15,3 @@ Camera coordinate system: https://de.mathworks.com/help/vision/gs/coordinate-sys
   - run the executable
 
 It was made in service of [this](https://www.youtube.com/watch?v=H_1OtbMD-sE) visual odometry series on Youtube.
-Download odometry ground truth poses (4 MB)
